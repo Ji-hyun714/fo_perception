@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>camera_stream</name>
+  <version>0.0.0</version>
+  <description>The camera_stream package</description>
+  <maintainer email="sjy3@wise-automotive.com">sjy3</maintainer>
+  <license>Apache-2.0</license>
+
+  <depend>rclcpp</depend>
+  <depend>rclpy</depend>
+  <depend>cv_bridge</depend>
+  <depend>sensor_msgs</depend>
+  <depend>OpenCV</depend>
+  <depend>GStreamer</depend>
+  <depend>image_transport</depend>
+  <depend>fo_msgs</depend>
+
+  <exec_depend>ros2launch</exec_depend>
+
+  <exec_depend>libopencv-dev</exec_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
+
+

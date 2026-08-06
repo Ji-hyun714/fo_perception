@@ -1,0 +1,234 @@
+%YAML:1.0
+---
+# ============================================================
+# Debug / Visualization Flags
+# ============================================================
+waitkey: 10
+enable_csv_log: 0
+
+log_detect_timing: 0
+log_process_time: 0 
+log_gate_trace: 1
+log_sample_kf_trace: 0
+log_lr_separation: 0
+log_frame_debug: 0
+
+show_org: 1
+show_undist: 1
+show_bev: 1
+show_gamma: 1
+show_sobel: 0
+show_bev_bin: 1
+show_sld_win: 1
+show_hls: 1
+show_contour: 1
+show_lane_mask: 1
+show_preprocessed : 0
+show_start_blob : 0
+show_sw : 1
+show_bev_pix : 1
+show_fitpoly : 1
+debug_pixel_overlap: 0
+debug_mode_select: 1
+show_sa_anchor: 1
+
+# ============================================================
+# `initIPM()` / Vehicle ROI / BEV Geometry
+# ============================================================
+roi_xmin: 3.0
+roi_xmax: 30.0
+roi_ymin: -4.5
+roi_ymax: 4.5
+bev_size: [640, 640]
+
+# ============================================================
+# `preprocess()` for Detect()
+# ============================================================
+ksize_vert: [1, 7]
+ksize_noise: [3, 3]
+gamma: 2.0
+sobel_thres: 40
+adaptive_block_size: 15
+adaptive_C: -10.0
+
+# `preprocess()` HLS white mask
+hls_white_hmin: 0
+hls_white_hmax: 180
+hls_white_lmin: 135
+hls_white_lmax: 255
+hls_white_smin: 0
+hls_white_smax: 80
+
+# `preprocess()` HLS yellow mask
+hls_yellow_hmin: 15
+hls_yellow_hmax: 35
+hls_yellow_lmin: 80
+hls_yellow_lmax: 255
+hls_yellow_smin: 80
+hls_yellow_smax: 255
+
+# `preprocess()` optional enhancement switches
+preprocess_adaptive_th: 0
+preprocess_morph_close: 0
+preprocess_contour_filter: 0
+
+# `preprocess()` contour filtering
+contour_min_area: 20
+contour_min_ratio: 1.5
+contour_merge_dist_x: 40
+contour_merge_dist_y: 20
+
+# `applyRoiMask()` trapezoid ROI
+roi_mask_enabled: 0
+roi_mid_offset_px: 45
+roi_half_top_ratio: 0.08
+roi_half_bot_ratio: 0.15
+
+# ============================================================
+# `DetectFromMask()` mask preprocessing
+# ============================================================
+mask_sobel_thresh : 5
+mask_close_kh : 9
+
+# ============================================================
+# `runSearchAround()` on BEV binary image
+# ============================================================
+margin_sa: 10
+safe_gap_multiplier: 2.0
+
+# ============================================================
+# Legacy anchor-SA params
+# kept for compatibility with old SA path / tuning reference
+# ============================================================
+sa_anchor_x_start_m: 2.0
+sa_anchor_x_end_m: 30.0
+sa_anchor_x_step_m: 2.0
+sa_anchor_win_w_px: 30
+sa_anchor_win_h_px: 15
+sa_anchor_strip_count: 5
+sa_anchor_strip_minpix: 3
+sa_anchor_min_valid_points: 5
+sa_anchor_fallback_to_sw: 1
+
+# ============================================================
+# `runSearchAroundMaskPath()` / `buildSaSeedCentersFromPrevCoeffs()`
+# new SA tracking params
+# ============================================================
+sa_seed_use_prev_start: 1
+sa_seed_track_length_m: 12.0
+sa_seed_count_max: 8
+sa_init_win_w_px: 50
+sa_init_win_h_px: 25
+sa_win_shrink_w_px_per_step: 2
+sa_win_shrink_h_px_per_step: 2
+sa_min_win_w_px: 25
+sa_min_win_h_px: 10
+lane_edge_min_run_px: 2
+lane_edge_wall_margin_px: 0
+lane_edge_enable_run_hop: 1
+lane_edge_max_hop_gap_px: 12
+lane_edge_min_hop_run_width_px: 2
+lane_edge_max_hops_per_row: 1
+prev_seed_start_prior_half_width_px: 25
+
+# ============================================================
+# `runSwV2Path()` / `runSwV2()`
+# ============================================================
+n_windows: 10
+sw_hist_bottom_divisor: 3
+margin_sw: 35
+minpix: 3
+win_h: 10
+win_w: 35
+sw_forward_limit_m: 25.0
+min_window_gap: 150
+expected_w: 300
+tolerance: 30
+max_shift: 50
+use_edge_sample_in_sw: 0
+
+# `runStripHistogramGuidedSearch()` in SW branch
+sw_use_strip_guided: 1
+strip_count: 12
+strip_empty_stop: 5
+strip_peak_min_value: 2550
+strip_noise_min_pixels: 300
+strip_noise_growth_ratio: 2.2
+strip_noise_max_occupancy_ratio: 0.38
+strip_min_guide_points: 4
+strip_band_margin: 35
+
+# `findStartBlobsInRoi()` / `selectStartBlobs()`
+blob_max_angle_deg: 15.0
+blob_max_pos_delta_px: 20.0
+
+# ============================================================
+# `fitPolynomial()`
+# ============================================================
+lane_expected_w: 3.6
+
+# ============================================================
+# `validateAndSmooth()` / `validateAndSmoothMaskLite()`
+# ============================================================
+x_check: 5.0
+lane_w_min: 2.5
+lane_w_max: 5.0
+max_bad_frames: 10
+valid_view_range: 5.0
+lane_sep_min_m: 1.5
+lr_slot_by_top_endpoint: 1
+lr_keep_closer_to_mid: 1
+
+# `evaluateLaneQuality()`
+quality_min_pixels_good: 1500
+quality_min_pixels_weak: 300
+quality_max_rmse_m_good: 0.08
+quality_max_rmse_m_weak: 0.18
+
+# mode switch thresholds in `findPixelsFromMask()`
+weak_to_sw: 8
+bad_to_sw: 3
+
+# hard gates / KF weights in `validateAndSmooth()`
+span_min_m_weak: 5.0
+span_min_m_good: 10.0
+rmse_hard_bad_m: 0.5
+dy_hard_m: 1.5
+dkappa_hard: 0.09
+kf_R_good: 0.1
+kf_R_weak: 1.0
+
+# `trackLaneSamplesKF()` / sample-vector KF
+use_geometry_kf: 0
+geom_kf_hold_frames: 15
+geom_kf_process_noise: 3.0e-3
+geom_kf_measurement_noise: 2.0e-2
+use_sample_kf_masklite: 0
+kf_sample_hold_frames: 5
+kf_sample_x_m: [5.0, 8.0, 11.0, 14.0, 25.0, 30.0]
+kf_sample_band_half_width_m: 1.0
+kf_sample_min_points_per_slot: 1
+kf_sample_Q_pos_list: [1.0e-3, 1.0e-3, 1.5e-3, 2.0e-3, 3.0e-3, 4.0e-3]
+kf_sample_Q_vel_list: [1.0e-2, 1.0e-2, 1.5e-2, 2.0e-2, 3.0e-2, 4.0e-2]
+kf_sample_R_diag_list: [0.2, 0.2, 0.3, 0.8, 1.2, 1.8]
+kf_sample_invalid_R: 100.0
+
+rawfit_hold_frames: 10
+
+# ============================================================
+# `yolopv2_node` / RViz lane marker output
+# ============================================================
+enable_lane_marker: 1
+lane_marker_frame_id: "camera_link"
+lane_marker_forward_min_m: 0.0
+lane_marker_forward_max_m: 30.0
+lane_marker_dx_m: 0.5
+lane_marker_line_width_m: 0.12
+lane_marker_origin_radius_m: 0.25
+lane_marker_z_m: 0.02
+
+# ============================================================
+# `drawROI()`
+# ============================================================
+color_roi: [0, 255, 0]
+thickness_roi: 2

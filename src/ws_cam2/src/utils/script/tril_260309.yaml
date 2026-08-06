@@ -1,0 +1,25 @@
+fixed_points:
+  A: [0.0, 0.9225]
+  B: [0.0, -0.9225]
+
+options:
+  default_solution_selection: positive_cross
+  tolerance: 1.0e-6
+  continue_on_error: true
+
+targets:
+  - id: "P1"
+    AP: 2.84
+    BP: 3.56
+
+  - id: "P2"
+    AP: 3.57
+    BP: 2.91
+
+  - id: "P3"
+    AP: 7.695
+    BP: 8.02
+
+  - id: "P4"
+    AP: 7.99
+    BP: 7.75

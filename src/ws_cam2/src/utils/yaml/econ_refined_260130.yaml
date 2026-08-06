@@ -1,0 +1,60 @@
+# 260114 calibration @bugs
+
+calib:
+  camera_model: 0
+
+  camera_matrix:
+    rows: 3
+    cols: 3
+    data: [
+          1209.5545719628, 0, 639.047044726894,
+          0, 1226.49205405573, 370.430511576673,
+          0.0, 0.0, 1.0
+          ]
+
+  distortion_coefficients:
+    rows: 1
+    cols: 5
+    data: [-0.321920562179139, 0.13262565949842, 0.00174783975305916, -0.000332896105375772, 0.11372345420193]
+
+  rotation_matrix: # 260114 취득 @벅스
+    rows: 3
+    cols: 3
+    data: [
+          -0.008404288993580943, -0.9998680744045458, -0.01389970190536709,
+          -0.08124507611508841, 0.014537002916920214, -0.9965881361692236, 
+          0.9966587206930795, -0.007246332364661763, -0.08135653098365853
+          ]
+ 
+  translation_vector:
+    rows: 3
+    cols: 1
+    data: [-0.4870308463819881,
+           1.1351933276598012,
+           2.305058987223931
+           ]
+
+camera_stream:
+  rtsp_url: ""
+
+  # Optimized pipeline: Capture at 1080p, GPU downscale to 720p
+  # Flow: 1920x1080 UYVY -> NV12(NVMM) -> GPU resize to 720p I420 -> CPU convert to BGR
+  #
+  # Performance:
+  # 1. nvvidconv #1: Format conversion UYVY->NV12(NVMM) (GPU)
+  # 2. nvvidconv #2: GPU resize 1080p->720p + NVMM->Host (~0.5ms)
+  # 3. videoconvert: I420->BGR color convert (CPU ~2ms)
+  # 4. Total processing: ~2.5ms (still 3x faster than full CPU pipeline)
+  # 5. Reduced ROS network load: 83 MB/s vs 186 MB/s
+  #
+  # Note: nvvidconv doesn't support BGR output on this Jetson version
+  gst_pipeline: "v4l2src device=/dev/video0 !
+    video/x-raw,format=UYVY,width=1920,height=1080,framerate=30/1 !
+    nvvidconv ! video/x-raw(memory:NVMM),format=NV12,width=1920,height=1080 !
+    nvvidconv ! video/x-raw,format=I420,width=1280,height=720 !
+    videoconvert ! video/x-raw,format=BGR !
+    appsink name=appsink0 max-buffers=2 drop=true emit-signals=true"
+
+size:
+  image_width: 1280
+  image_height: 720

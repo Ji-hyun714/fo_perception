@@ -1,0 +1,11 @@
+int32 track_id
+int32 track_status
+int32 track_valid
+int32 track_type
+float32 track_pos_x
+float32 track_pos_y
+float32 track_vel_x
+float32 track_vel_y
+float32 length
+float32 width
+int32 rolling_count

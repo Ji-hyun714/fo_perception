@@ -1,0 +1,5 @@
+# Cam2_TL_Cam2_Traffic_Light_Data
+
+uint8 traffic_light_data
+uint8 traffic_light_valid_flag
+uint16 traffic_light_accuracy

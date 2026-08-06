@@ -1,0 +1,27 @@
+### LiDAR
+- r 단절 후 fail flag 확인
+- 인지 결과 rivz2로 확인
+- /lidar/sf_objs 퍼블리시 되는지 확인
+- track status(트래킹 일정 수준에 따라서), track valid(트래킹 일정 수준 이상이면) 작업
+
+
+### RADAR
+- track status description?  >> (교통대) 3이상만 사용함
+- width 출력 안됨?  >> (교통대) 확인해보고 알려주겠음
+    : 출력 안되면 1로 pub되게 수정 필요
+- vel x, y 작업 필요
+    : gnss로 받아서 상대속도 -> 절대속도 변경
+
+
+### GNSS
+- fail flag, rolling count, failure state 작업
+- rtk_latitude, rtk_longitude 좌표계? (EPSG:32652 ?)
+- heading -> 차량 자세 말고 차량 위치로 계산해도 되는지?
+- x, y축 속도 성분 구하기
+
+
+### UDP
+- lidar, radar 등으로 나가는 인지결과는 안쓰고 sf 만 사용하는지?
+    : radar의 valid 처리 애매함
+- SW_SensProc 작업
+    : 3개 센서 드라이버 중 하나라도 오류나면 오류로 처리

@@ -1,0 +1,21 @@
+/ground_removal_lidar_13:
+  ros__parameters:
+    input_topic: /lidar_13_201/points
+    ground_topic: /ground/lidar_13
+    nonground_topic: /nonground/lidar_13
+
+    min_range: 1.2
+    max_range: 80.0
+
+    ground_z_min: -1.0
+    ground_z_max: 0.3
+
+    max_neighbor_z_diff: 0.25
+    max_slope_deg: 12.0
+    max_neighbor_xy_dist: 1.0
+
+    use_near_low_z_ground: true
+    near_low_z_range: 4.5
+    near_low_z_threshold: -0.4
+
+    allow_no_ring: false

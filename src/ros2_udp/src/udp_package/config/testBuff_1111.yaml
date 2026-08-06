@@ -1,0 +1,135 @@
+# general
+param_camera2_fail_flag_: 1       ## 0 ~ 1
+param_camera2_alive_counter_: 1   ## 0 ~ 255
+param_radar2_c_fail_flag_: 1
+param_radar2_c_alive_counter_: 1
+param_radar2_f_fail_flag_: 1
+param_radar2_f_alive_counter_: 1
+param_radar2_r_fail_flag_: 1
+param_radar2_r_alive_counter_: 1
+param_lidar2_fl_fail_flag_: 1
+param_lidar2_fl_alive_counter_: 1
+param_lidar2_fr_fail_flag_: 1
+param_lidar2_fr_alive_counter_: 1
+param_lidar2_r_fail_flag_: 1
+param_lidar2_r_alive_counter_: 1
+param_gnss_fail_flag_: 1
+param_gnss_alive_counter_: 1
+param_v2x_fail_flag_: 1
+param_v2x_alive_counter_: 1
+
+param_camera2_failure_state_: 1    ## 0 ~ 15
+param_radar2_c_failure_state_: 1
+param_radar2_f_failure_state_: 1
+param_radar2_r_failure_state_: 1
+param_lidar2_fl_failure_state_: 1
+param_lidar2_fr_failure_state_: 1
+param_lidar2_r_failure_state_: 1
+param_gnss_failure_state_: 1
+param_v2x_failure_state_: 1
+
+param_sense_staute_rolling_counter_: 1   ## 0 ~ 255
+param_SW_VehiCommS_: 1                   ## 0 ~ 15
+param_SW_SensProc_: 1
+param_SW_SensFusion_: 1
+param_SW_ADSMonitorS_: 1
+param_HW_ProcSense_: 1
+param_HW_ExtNPU_: 1
+param_HW_PMICS_: 1
+param_HW_EthPhySen_: 1                   ## 0 ~ 3
+param_HW_EthPhyCam_: 1                   ## 0 ~ 3
+param_HW_CCANS_: 1                   ## 0 ~ 3
+param_HW_IntCANS_: 1                   ## 0 ~ 3
+param_HW_DDR_: 1
+param_HW_eMMC_: 1
+param_VEH_Chassis_: 1                   ## 0 ~ 3
+param_DNN_IMG_: 1
+param_DNN_PCD_: 1
+
+# camera ld
+param_lane_mark_type_: 1         ## 0 ~ 15
+param_lane_mark_quality_: 1      ## 0 ~ 3
+param_lane_mark_position_: 1     ## -128 ~ 127.99609375
+param_lane_mark_model_a_: 1      ## -0.5 ~ 0.5
+
+param_lane_mark_heading_angle_: 1              ## -0.357 ~ 0.357
+param_lane_mark_model_view_range_: 1           ## 0 ~ 127.99609375
+param_lane_mark_model_view_range_availability_: 1  ## 0 ~ 1
+param_lane_mark_model_da_: 1                   ## -0.03125 ~ 0.03125
+
+param_alive_counter_ld_: 1             ## 0 ~ 255
+
+# camera td
+param_alive_counter_td_a_: 1           ## 0 ~ 3 (쓰진않음)
+param_object_age_: 1                 ## 0 ~ 255
+param_angle_rate_: 1                 ## -100 ~ 100
+param_angle_left_: 1                 ## -100 ~ 100
+param_angle_right_: 1                ## -100 ~ 100
+param_motion_status_: 1               ## 0 ~ 15
+param_object_lane_: 1                 ## 0 ~ 15
+param_cam2_obstacle_brake_lights_: 1   ## 0 ~ 1
+
+param_alive_counter_td_b_: 1                  ## 0 ~ 3 (쓰진않음)
+param_range_: 1                           ## 0 ~ 409.5
+param_object_vaildity_: 1                     ## 0 ~ 3
+param_range_rate_: 1                      ## -100 ~ 309.5
+param_cam2_obstacle_physical_width_: 1    ## 0 ~ 12.75
+param_cam2_track_id_: 1                     ## 0 ~ 255
+param_object_type_: 1                        ## 0 ~ 15
+
+# camera tl
+param_traffic_light_data_: 1          ## 0 ~ 15
+param_traffic_light_valid_flag_: 1     ## 0 ~ 3
+param_traffic_light_accuracy_: 1     ## 0 ~ 100
+
+# camera od
+param_rolling_count_od_: 1           ## 0 ~ 3 (쓰진않음)
+param_camera2_static_obj_type_: 1   ## 0 ~ 15
+param_static_object_status_: 1       ## 0 ~ 7
+param_static_object_pos_y_: 1     ## -51.2 ~ 51.1
+param_static_object_pos_x_: 1    ## 0 ~ 204.7
+param_static_object_pos2_y_: 1    ## -25.6 ~ 25.55
+param_static_object_pos2_x_: 1   ## -10.24 ~ 10.23  ?? 10m까지밖에 못봄
+
+# lidar td
+param_track_status_: 1               ## 0 ~ 7
+param_track_valid_lidar_: 1          ## 0 ~ 1
+param_track_pos_y_: 1             ## -51.2 ~ 51.1
+param_track_pos_x_: 1            ## -102.4 ~ 102.3
+param_track_rolling_count_a_: 1      ## 0 ~ 3 (쓰진않음)
+
+param_lidar_track_id_: 1           ## 0 ~ 255
+param_track_add_info_status_: 1      ## 0 ~ 7
+param_track_width_: 1             ## -51.2 ~ 51.1
+param_track_length_: 1           ## 0 ~ 204.7
+param_track_rolling_count_b_: 1      ## 0 ~ 1 (쓰진않음)
+
+# radar
+param_radar2_track_id_: 1         ## 0 ~ 255
+param_radar2_track_status_: 1       ## 0 ~ 7
+param_radar2_track_pos_y_: 1     ## -51.2 ~ 51.1
+param_radar2_track_pos_x_: 1    ## -102.4 ~ 102.3
+param_track_valid_radar_: 1         ## 0 ~ 3
+param_radar2_track_type_: 1        ## 0 ~ 15
+param_radar2_track_vel_y_: 1    ## -25.6 ~ 25.55
+param_radar2_rolling_count_: 1      ## 0 ~ 3 (쓰진않음)
+param_radar2_track_vel_x_: 1    ## -81.92 ~ 81.91
+
+# sf2
+param_track_valid_sf2_: 1     ## 0 ~ 7
+param_sf2_track_pos_y_: 1    ## -51.2 ~ 51.1
+param_sf2_track_pos_x_: 1      ## -102.4 ~ 102.3
+param_sf2_rolling_count_: 1    ## 0 ~ 3 (쓰진않음)
+param_sf2_track_type_: 1     ## 0 ~ 15
+param_sf2_track_vel_y_: 1  ## -25.6 ~ 25.55
+param_sf2_track_vel_x_: 1  ## -81.92 ~ 81.91
+
+param_sf2_track_id_: 1                  ## 0 ~ 255
+
+# gps
+param_rtk_latitude_: 1     ## -2147483648 ~ 2147483647
+param_rtk_longitude_: 1    ## -2147483648 ~ 2147483647
+
+param_rtk_rolling_count_: 1        ## 0 ~ 15 (쓰진않음)
+param_rtk_heading_: 1           ## 0 ~ 65535 
+param_rtk_fix_flag_: 1              ## 0 ~ 7

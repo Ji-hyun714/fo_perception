@@ -1,0 +1,5 @@
+ros2 launch linefit_ground_segmentation_ros fl_segmentation.launch.py
+
+ros2 launch linefit_ground_segmentation_ros fr_segmentation.launch.py
+
+ros2 launch linefit_ground_segmentation_ros r_segmentation.launch.py

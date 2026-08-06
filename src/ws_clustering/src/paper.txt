@@ -1,0 +1,26 @@
+## bag play
+cd ~/bag/velodyne/fushion2/1_for_back
+ros2 bag play rosbag2_2025_10_15-17_39_04_0.db3
+
+## tf
+bash ~/fo_perception/src/ws_clustering/src/tf.bash
+
+## ground
+cd ~/fo_perception
+cb --packages-select velo16_ground && si && ros2 launch velo16_ground multi_ground_removal.launch.py
+
+## TFnonground
+cd ~/fo_perception
+cb --packages-select lidar_merge && si && ros2 launch lidar_merge tf_ground_merge.launch.py
+
+## merge
+python /wise/home/fo_perception/src/Documents/lidar_frame_change/lidar_merge_xyz.py
+
+## clustering
+cd ~/fo_perception
+cbp clustering && si && ros2 run clustering tracking_node_test (z scaling)
+cbp clustering && si && ros2 run clustering tracking_node (nope)
+
+
+## rviz2
+bash ~/fo_perception/src/ws_clustering/src/tf.bash

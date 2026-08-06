@@ -1,0 +1,15 @@
+[Unit]
+Description=Radar driver setting
+After=network.target multi-user.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/wise/fo_perception/start_radar_services.sh
+Restart=on-failure
+TimeoutStartSec=30
+StartLimitInterval=60
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target

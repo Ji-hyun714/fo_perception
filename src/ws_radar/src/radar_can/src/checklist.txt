@@ -1,0 +1,12 @@
+1. radar tr hz? (이론상 50 떠야함), 렉 안걸리는지?
+ros2 topic hz /radar_tr
+ros2 topic hz /radar_general
+
+2. radar general 중간에 빼도 fail 뜨는지?
+
+3. radar에서 status가 의미하는 바? (0~7)
+
+4. valid 작업 필요
+
+5. 차 앞에서 왔다갔다 하는 데이터 취득
+-> 필터링으로 쓸거있는지 체크

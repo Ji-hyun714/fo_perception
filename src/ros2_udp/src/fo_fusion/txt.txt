@@ -1,0 +1,10 @@
+
+
+
+colcon build
+source install/setup.bash
+ros2 run fo_fusion SF2Publisher
+
+
+ros2 topic echo /cam2/sf_objs 
+ros2 topic echo /fusion/sf_objs 

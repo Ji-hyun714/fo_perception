@@ -1,0 +1,7 @@
+# Cam2_Lane_Additional_Data_1
+
+uint8 rolling_counter
+uint8 rh_guardrail
+uint8 lh_guardrail
+uint8 right_lane_color_information
+uint8 left_lane_color_information

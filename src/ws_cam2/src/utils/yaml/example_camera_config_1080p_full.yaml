@@ -1,0 +1,61 @@
+# Camera Configuration: Full 1080p for multi-purpose use
+#
+# Strategy: Full resolution publish, late resize at consumer
+#
+# Performance Characteristics:
+# - Network bandwidth: 186 MB/s @ 30fps
+# - Preserves original quality
+# - Single resize: 1920x1080 -> 640x640 at YOLO node
+#
+# Use case: Multi-purpose (YOLO + visualization + recording + debugging)
+
+calib:
+  camera_model: 0
+
+  camera_matrix:
+    rows: 3
+    cols: 3
+    # Full 1080p calibration
+    data: [1000.0, 0.0, 960.0,
+           0.0, 1000.0, 540.0,
+           0.0, 0.0, 1.0]
+
+  distortion_coefficients:
+    rows: 1
+    cols: 5
+    data: [0.0, 0.0, 0.0, 0.0, 0.0]
+
+  rotation_matrix:
+    rows: 3
+    cols: 3
+    data: [1.0, 0.0, 0.0,
+           0.0, 1.0, 0.0,
+           0.0, 0.0, 1.0]
+
+  translation_vector:
+    rows: 3
+    cols: 1
+    data: [0.0, 0.0, 0.0]
+
+camera_stream:
+  rtsp_url: ""
+
+  # Full resolution pipeline: Capture and publish at 1080p
+  # Flow: 1920x1080 UYVY -> NV12(NVMM) -> GPU convert -> 1920x1080 BGR -> appsink
+  #
+  # Why this approach:
+  # 1. Preserves original camera quality
+  # 2. Flexible: Different subscribers can use different resolutions
+  # 3. One-step resize at YOLO: 1920x1080 -> 640x640 (no intermediate)
+  # 4. Useful for recording, debugging, visualization
+  #
+  # Note: Higher network bandwidth (186 MB/s vs 83 MB/s for 720p)
+  gst_pipeline: "v4l2src device=/dev/video0 !
+    video/x-raw,format=UYVY,width=1920,height=1080,framerate=30/1 !
+    nvvidconv ! video/x-raw(memory:NVMM),format=NV12 !
+    nvvidconv ! video/x-raw,format=BGR !
+    appsink name=appsink0 max-buffers=2 drop=true"
+
+size:
+  image_width: 1920
+  image_height: 1080

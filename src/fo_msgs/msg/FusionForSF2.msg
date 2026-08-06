@@ -1,0 +1,19 @@
+uint8 track_valid
+uint8 sf2_track_status
+float32 sf2_track_pos_y
+float32 sf2_track_pos_x
+uint8 sf2_rolling_count
+uint8 sf2_track_type
+float32 sf2_track_vel_y
+float32 sf2_track_vel_x
+uint8 used_track_number
+uint8 sf2_add_info_status
+uint8 sf2_track_id
+uint8 used_cam2_track_id_first
+uint8 used_cam2_track_id_second
+uint8 used_lidar2_track_id_first
+uint8 used_lidar2_track_id_second
+uint8 used_radar2_track_id_first
+uint8 used_radar2_track_id_second
+
+float32 confidence

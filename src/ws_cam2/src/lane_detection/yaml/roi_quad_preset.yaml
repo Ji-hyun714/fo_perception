@@ -1,0 +1,15 @@
+%YAML:1.0
+---
+roi_quad_enable_pre: 0
+roi_quad_enable_post: 0
+img_w: 1280
+img_h: 720
+roi_quad_pts:
+   - 384
+   - 396
+   - 896
+   - 396
+   - 1254
+   - 706
+   - 26
+   - 706

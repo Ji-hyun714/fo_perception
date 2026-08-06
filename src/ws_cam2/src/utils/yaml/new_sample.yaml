@@ -1,0 +1,57 @@
+# Camera Configuration: ioniq front camera(econ)
+
+calib:
+  lens_model: 0 # 0: pinhole, 1: fisheye
+
+  K: # camera matrix
+    rows: 3
+    cols: 3
+    data: [
+          1209.5545719628, 0, 639.047044726894,
+          0, 1226.49205405573, 370.430511576673,
+          0.0, 0.0, 1.0
+          ]
+
+  K_rect: # camera matrix undistorted
+    rows: 3
+    cols: 3
+    data: [
+          1209.5545719628, 0, 639.047044726894,
+          0, 1226.49205405573, 370.430511576673,
+          0.0, 0.0, 1.0
+          ]
+
+  D: # distortion coefficients, pinhole 5 cols, fisheye 4 cols
+    rows: 1
+    cols: 5
+    data: [-0.321920562179139, 0.13262565949842, 0.00174783975305916, -0.000332896105375772, 0.11372345420193]
+
+  R: # Rotation matrix
+    rows: 3
+    cols: 3
+    data: [
+          -0.01927121101202789, -0.9998142901602788, -7.494950243406114e-05,
+          -0.07029243850168623, 0.001429649947582323, -0.9975254027795553, 
+          0.9973402596484394, -0.01921825414353235, -0.07030693559001162
+          ] # 260106 취득 @벅스
+
+  t: # translation vector
+    rows: 3
+    cols: 1
+    data: [-0.01721196347315778, 1.028170377082039, 1.629619124391924] # 260106 취득 @벅스
+
+camera_stream:
+  rtsp_url: ""
+
+  # Optimized pipeline: Capture at 1080p, GPU downscale to 720p
+  # Flow: 1920x1080 UYVY -> NV12(NVMM) -> GPU resize to 720p I420 -> CPU convert to BGR
+  gst_pipeline: "v4l2src device=/dev/video0 !
+    video/x-raw,format=UYVY,width=1920,height=1080,framerate=30/1 !
+    nvvidconv ! video/x-raw(memory:NVMM),format=NV12,width=1920,height=1080 !
+    nvvidconv ! video/x-raw,format=I420,width=1280,height=720 !
+    videoconvert ! video/x-raw,format=BGR !
+    appsink name=appsink0 max-buffers=2 drop=true emit-signals=true"
+
+size:
+  image_width: 1280
+  image_height: 720

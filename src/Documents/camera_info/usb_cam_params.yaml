@@ -1,0 +1,3 @@
+usb_cam:
+        ros_parameters:
+                white_balance_temparature_auto: 0

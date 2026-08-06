@@ -1,0 +1,7 @@
+# Cam2_X_Lane_A
+
+uint8 lane_mark_type
+uint8 lane_mark_quality
+float32 lane_mark_position
+float32 lane_mark_model_a
+float32 lane_mark_width

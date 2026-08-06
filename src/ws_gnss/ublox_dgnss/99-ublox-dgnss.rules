@@ -1,0 +1,4 @@
+# u-blox GNSS 수신기 libusb 접근 허용 (ublox_dgnss_node 용)
+# 설치:  sudo cp 99-ublox-dgnss.rules /etc/udev/rules.d/
+#        sudo udevadm control --reload-rules && sudo udevadm trigger
+SUBSYSTEM=="usb", ATTR{idVendor}=="1546", MODE="0666"

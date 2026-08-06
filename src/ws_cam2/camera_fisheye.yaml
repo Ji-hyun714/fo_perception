@@ -1,0 +1,35 @@
+# # generated 2025-09-12T15:04:59
+# image_width: 1280
+# image_height: 720
+# camera_name: calib_cam
+# camera_matrix:
+#   rows: 3
+#   cols: 3
+#   data: [596.242804413754, 0, 640, 0, 606.212049838454, 360, 0, 0, 1]
+# distortion_model: equidistant
+# distortion_coefficients:
+#   rows: 1
+#   cols: 4
+#   data: [0.145233418368253, -0.448981613840834, 0.348017752004174, -0.0460532929321028]
+# # rectification_matrix:
+# #   rows: 3
+# #   cols: 3
+# #   data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+# # projection_matrix:
+# #   rows: 3
+# #   cols: 4
+# #   data: [596.242804413754, 0, 640, 0, 0, 606.212049838454, 360, 0, 0, 0, 1, 0]
+
+image_rectifier:
+  ros__parameters:
+    input_topic: "/image_raw"
+    output_topic: "/image_rect"
+
+    image_width: 1280
+    image_height: 720
+
+    camera_matrix:
+      data: [ 596.242804413754, 0, 640, 0, 606.212049838454, 360, 0, 0, 1 ]
+
+    distortion_coefficients:
+      data: [ 0.145233418368253, -0.448981613840834, 0.348017752004174, -0.0460532929321028]

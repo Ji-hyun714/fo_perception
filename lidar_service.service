@@ -1,0 +1,16 @@
+[Unit]
+Description=LiDAR and Detection ROS2 Service
+After=network.target multi-user.target
+
+[Service]
+Type=simple
+User=wise
+Environment="PYTHONPATH=/usr/local/lib/python3.10/dist-packages"
+ExecStart=/bin/bash /home/wise/fo_perception/start_lidar_services.sh
+Restart=on-failure
+TimeoutStartSec=30
+StartLimitInterval=60
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target

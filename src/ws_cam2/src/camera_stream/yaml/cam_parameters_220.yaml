@@ -1,0 +1,67 @@
+camera_stream:
+  # --- GStreamer Pipeline Configuration ---
+  rtsp_url: 
+    "rtsp://192.168.0.220:554\
+    /user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_stream"
+
+  # The GStreamer pipeline, with a placeholder for the URL
+  # We use a placeholder like "{url}" that we can replace in our C++ code.
+  # gst_pipeline: 
+  #   "rtspsrc location=
+  #   rtsp://192.168.0.217:554/user=admin_password=tlJwpbo6_channel=0_stream=0&onvif=0.sdp?real_stream
+  #   protocols=tcp latency=0 ! 
+  #   rtph265depay ! h265parse ! nvv4l2decoder ! nvvidconv ! 
+  #   video/x-raw,format=BGRx,width=1280,height=720 ! 
+  #   videoconvert ! video/x-raw,format=BGR ! appsink name=appsink"
+
+  gst_pipeline: 
+    "rtspsrc location={url} protocols=tcp latency=0 ! 
+    rtph265depay ! h265parse ! nvv4l2decoder ! nvvidconv ! 
+    video/x-raw,format=BGRx,width=1280,height=720 ! 
+    videoconvert ! video/x-raw,format=BGR ! appsink name=appsink"
+    # "rtspsrc location={url} protocols=tcp latency=0 ! 
+    # rtph264depay ! h264parse ! nvv4l2decoder ! nvvidconv ! 
+    # video/x-raw,format=BGRx,width=1280,height=720 ! 
+    # videoconvert ! video/x-raw,format=BGR ! appsink name=appsink"
+
+calib:
+  # --- Camera Intrinsics ---
+  # 3x3 Camera Matrix K (row-major order)
+
+  camera_model: 1   # 0:pinhole / 1:fisheye
+
+  camera_matrix:
+    rows: 3
+    cols: 3
+    data: [
+          596.242804413754, 0, 640,
+          0, 606.212049838454, 360,
+          0.0, 0.0, 1.0
+          ]
+
+  # Distortion Coefficients D = [k1, k2, p1, p2, k3]
+  distortion_coefficients:
+    rows: 1
+    cols: 4
+    data: [0.145233418368253, -0.448981613840834, 0.348017752004174, -0.0460532929321028]
+
+  # --- Camera Extrinsics (relative to a base frame like 'base_link') ---
+  # 3x3 Rotation Matrix R (row-major order)
+  rotation_matrix:
+    rows: 3
+    cols: 3
+    data: [
+          0.02006879253265631, -0.9997020415116865, -0.01389502657959448,
+          0.1828656803129355, 0.01733366206390713, -0.9829850899800778,
+          0.9829330529237322, 0.01718640034506079, 0.1831590595990568
+          ]
+
+  # 3x1 Translation Vector t = [x, y, z] in meters
+  translation_vector:
+    rows: 3
+    cols: 1
+    data: [0.4657723062176374, 1.774409539061654, 2.652951619441843]
+
+size:
+  image_width: 1280
+  image_height: 720

@@ -1,0 +1,13 @@
+uint8 lidar_track_id
+uint8 lidar_track_valid
+uint8 object_type
+float32 pos_y
+float32 pos_x
+float32 velocity_y
+float32 velocity_x
+float32 confidence
+float32 length
+float32 width
+float32 height
+float32 cz
+uint8 rolling_count

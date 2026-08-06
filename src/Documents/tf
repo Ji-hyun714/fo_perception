@@ -1,0 +1,97 @@
+## 260623 해주
+ros2 run tf2_ros static_transform_publisher \
+  2.2 1.0 0.0 1.15 0.0 0.0 \
+  vehicle velo1
+
+
+ros2 run tf2_ros static_transform_publisher \
+  2.2 -1.0 0.0 -1.2 0.0 0.0 \
+  vehicle velo2
+  
+  
+ros2 run tf2_ros static_transform_publisher \
+  -2.0 0.0 0.0 -2.6 0.0 0.0 \
+  vehicle velo3
+  
+
+## g70_calib_bag
+ros2 run tf2_ros static_transform_publisher \
+  2.2 1.0 0.0 1.17 0.0 0.0 \
+  vehicle velo1
+
+
+ros2 run tf2_ros static_transform_publisher \
+  2.2 -0.8 0.0 -1.17 0.0 0.0 \
+  vehicle velo2
+  
+  
+ros2 run tf2_ros static_transform_publisher \
+  -2.0 0.0 0.0 -2.58 0.0 0.0 \
+  vehicle velo3
+
+
+## fusion1 bag
+ros2 run tf2_ros static_transform_publisher \
+  2.2 1.0 0.0 1.20 0.0 0.0 \
+  vehicle velo1
+
+
+ros2 run tf2_ros static_transform_publisher \
+  2.2 -0.5 0.0 -1.20 0.0 0.0 \
+  vehicle velo2
+  
+  
+ros2 run tf2_ros static_transform_publisher \
+  -1.8 0.0 0.0 -2.58 0.0 0.0 \
+  vehicle velo3
+
+
+
+
+## 기존
+ros2 run tf2_ros static_transform_publisher \
+  2.2 1.0 0.0 1.17 0.0 0.0 \
+  vehicle velo1
+
+ros2 run tf2_ros static_transform_publisher \
+  2.2 -1.0 0.0 -1.1499 0.0 0.0 \
+  vehicle velo2
+
+ros2 run tf2_ros static_transform_publisher \
+  2.2 -1.0 0.0 -1.15 0.0 0.0 \
+  vehicle velo2
+
+
+
+  
+## 교정 끝나면 /home/wise/fo_perception/src/ws_merge/src/lidar_merge/src/tf_ground_1x.cpp 수정
+
+## fusion2 bag
+ros2 run tf2_ros static_transform_publisher \
+  --x 2.2 --y 1.0 --z 0.0 \
+  --yaw 1.1698 --pitch 0.0 --roll 0.0 \
+  --frame-id vehicle \
+  --child-frame-id velo1
+
+
+
+ros2 run tf2_ros static_transform_publisher \
+  --x 2.2 --y -1.0 --z 0.0 \
+  --yaw -1.21 --pitch 0.0 --roll 0.0 \
+  --frame-id vehicle \
+  --child-frame-id velo2
+  
+  
+ros2 run tf2_ros static_transform_publisher \
+  --x -2.0 --y 0.3 --z 0.0 \
+  --yaw -2.6 --pitch 0.0 --roll 0.0 \
+  --frame-id vehicle \
+  --child-frame-id velo3
+
+
+  
+  
+  kcity_1 bag 기준 calib
+ros2 run tf2_ros static_transform_publisher \
+  25.6848680307939 0.1404477211278757 0.7455239015165623 8.841971663768115 4.418428393836481 175.14849282090816 \
+  vehicle velo2

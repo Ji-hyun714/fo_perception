@@ -1,0 +1,8 @@
+# Cam2_X_Lane_B
+
+float32 lane_mark_heading_angle
+float32 lane_mark_model_view_range
+uint8 lane_mark_model_view_range_availability 
+float32 lane_mark_model_da
+float32 lane_start
+float32 lane_end
