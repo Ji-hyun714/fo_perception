@@ -10,3 +10,5 @@ src/lidar_calib/src/Multi_LiCa/output/stitched_transformed.pcd
 *.pyc
 *.xlsx
 *.csv
+*.onnx
+*.trt
