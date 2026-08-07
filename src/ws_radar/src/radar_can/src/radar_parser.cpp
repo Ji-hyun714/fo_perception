@@ -14,14 +14,8 @@ RadarParser::~RadarParser() {
 
 bool RadarParser::init() {
     can_channel_ = "can0";
-    delay_threshold_ = DELAY_THRESHOLD_MS / 1000.0;
-    lost_threshold_  = LOST_THRESHOLD_MS  / 1000.0;
-
     last_msg_time_ = this->now();
 
-    fail_flag_ = 0;
-    alive_counter_ = 0;
-    is_disconnected = false;
     start = false;
     tr_objects = 0;
 
@@ -154,7 +148,7 @@ fo_msgs::msg::RadarTr RadarParser::tr_parser(const struct can_frame &frame) {
 
     float pos_x = raw_range * std::cos(rad) * 0.1f;
     float pos_y = raw_range * std::sin(rad) * 0.1f;
-    tr.track_pos_x       = pos_x;
+    tr.track_pos_x       = pos_x + 1.9;  // 1.9m offset (차량 뒷바퀴축~탐지)
     tr.track_pos_y       = pos_y;
 
     // vel [m/s]

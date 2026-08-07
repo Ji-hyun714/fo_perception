@@ -76,6 +76,5 @@
         "coroutine": "cpp",
         "source_location": "cpp",
         "cfenv": "cpp"
-    },
-    "cmake.sourceDirectory": "/home/wise/Documents/fo_perception/src/fo_msgs"
+    }
 }

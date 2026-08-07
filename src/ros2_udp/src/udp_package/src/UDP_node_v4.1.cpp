@@ -388,8 +388,7 @@ void MsgSubscriber::callback_lidar1_delay(const std_msgs::msg::Bool::SharedPtr m
     // 데이터가 비어 있지 않으면 fail, 비어 있으면 정상
     if (msg->data) {
         buffer_[idx].general_sensor2_status.lidar2_fl_failure_state = static_cast<uint8_t>(1);
-    } else {
-        buffer_[idx].general_sensor2_status.lidar2_fl_failure_state = static_cast<uint8_t>(0);
+        buffer_[idx].general_sensor2_status.lidar2_fl_fail_flag = static_cast<uint8_t>(msg->data[1]);
     }
 }
 
@@ -398,8 +397,7 @@ void MsgSubscriber::callback_lidar2_delay(const std_msgs::msg::Bool::SharedPtr m
     int idx = write_idx_.load();
     if (msg->data) {
         buffer_[idx].general_sensor2_status.lidar2_fr_failure_state = static_cast<uint8_t>(1);
-    } else {
-        buffer_[idx].general_sensor2_status.lidar2_fr_failure_state = static_cast<uint8_t>(0);
+        buffer_[idx].general_sensor2_status.lidar2_fr_fail_flag = static_cast<uint8_t>(msg->data[1]);
     }
 }
 
@@ -408,8 +406,7 @@ void MsgSubscriber::callback_lidar3_delay(const std_msgs::msg::Bool::SharedPtr m
     int idx = write_idx_.load();
     if (msg->data) {
         buffer_[idx].general_sensor2_status.lidar2_r_failure_state = static_cast<uint8_t>(1);
-    } else {
-        buffer_[idx].general_sensor2_status.lidar2_r_failure_state = static_cast<uint8_t>(0);
+        buffer_[idx].general_sensor2_status.lidar2_r_fail_flag = static_cast<uint8_t>(msg->data[1]);
     }
 }
 

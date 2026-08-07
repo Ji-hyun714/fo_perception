@@ -55,6 +55,7 @@ class LidarMonitorNode(Node):
                 else:
                     self.fail_flags[i] = 1
                     self.failure_states[i] = 15
+                    self.alive_counters[i] = (self.alive_counters[i] + 1) % 128
 
             # 메시지 생성
             msg = UInt8MultiArray()

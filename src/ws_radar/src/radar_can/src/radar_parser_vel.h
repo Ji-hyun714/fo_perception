@@ -2,11 +2,14 @@
 #include <std_msgs/msg/u_int8_multi_array.hpp>
 #include "fo_msgs/msg/radar_tr.hpp"
 #include "fo_msgs/msg/radar_tr_array.hpp"
+#include "ublox_ubx_msgs/msg/ubx_nav_pvt.hpp"
 
 #include <chrono>
 #include <memory>
 #include <string>
 #include <vector>
+#include <atomic>
+#include <cstdint>
 #include <linux/can.h>
 #include <linux/can/raw.h>
 #include <sys/socket.h>
@@ -42,6 +45,8 @@ private:
     void publish_latest_tr_array();
     void recv_loop();
     fo_msgs::msg::RadarTr tr_parser(const struct can_frame &frame);
+    // /base/ubx_nav_pvt 로부터 자차(ego) 지면 속도를 갱신한다.
+    void pvt_callback(const ublox_ubx_msgs::msg::UBXNavPVT::SharedPtr msg);
     
     // thread
     std::thread recv_thread_;
@@ -58,6 +63,18 @@ private:
     rclcpp::Publisher<std_msgs::msg::UInt8MultiArray>::SharedPtr pub_radar_general_;
     rclcpp::TimerBase::SharedPtr publish_timer_;
     rclcpp::TimerBase::SharedPtr timer_general_;
+
+    // subscriber (GNSS)
+    rclcpp::Subscription<ublox_ubx_msgs::msg::UBXNavPVT>::SharedPtr sub_pvt_;
+
+    // ego-motion (GNSS /base/ubx_nav_pvt) : 상대속도 -> 절대속도 보정용
+    bool absolute_velocity_{true};                 // true면 절대속도로 변환
+    std::string pvt_topic_;                        // 구독 토픽명
+    std::atomic<float> ego_speed_{0.0f};           // [m/s] 자차 전방 지면속도
+    std::atomic<int64_t> ego_speed_stamp_ns_{0};   // 마지막 갱신 시각(ns), 신선도 판단용
+    // 위치 차분용 상태(PVT 콜백 스레드에서만 접근)
+    bool have_prev_pvt_{false};
+    double prev_lat_{0.0}, prev_lon_{0.0}, prev_itow_{0.0};
 
     // variable
     std::string can_channel_;

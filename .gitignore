@@ -10,7 +10,3 @@ src/lidar_calib/src/Multi_LiCa/output/stitched_transformed.pcd
 *.pyc
 *.xlsx
 *.csv
-
-# 대용량 모델 가중치 (GitHub 100MB 제한 초과)
-*.onnx
-*.trt

@@ -1,4 +1,4 @@
-#include "radar_parser.h"
+#include "radar_parser_vel.h"
 
 using namespace std::chrono_literals;
 
@@ -14,18 +14,31 @@ RadarParser::~RadarParser() {
 
 bool RadarParser::init() {
     can_channel_ = "can0";
-    delay_threshold_ = DELAY_THRESHOLD_MS / 1000.0;
-    lost_threshold_  = LOST_THRESHOLD_MS  / 1000.0;
-
     last_msg_time_ = this->now();
 
-    fail_flag_ = 0;
-    alive_counter_ = 0;
-    is_disconnected = false;
-    tr_objects = 64;
+    start = false;
+    tr_objects = 0;
+
+    // parameters (절대속도 변환 on/off, GNSS 토픽)
+    absolute_velocity_ = this->declare_parameter<bool>("absolute_velocity", true);
+    pvt_topic_ = this->declare_parameter<std::string>("pvt_topic", "/base/ubx_nav_pvt");
 
     // publisher
     pub_radar_tr_ = this->create_publisher<fo_msgs::msg::RadarTrArray>("/radar_tr", QOS_QUEUE);
+    publish_timer_ = this->create_wall_timer(
+        // 20ms, std::bind(&RadarParser::publish_latest_tr_array, this));  // 50hz
+        50ms, std::bind(&RadarParser::publish_latest_tr_array, this));  // 20hz
+
+    // subscriber: GNSS 자차 속도 (상대->절대 속도 보정)
+    if (absolute_velocity_) {
+        sub_pvt_ = this->create_subscription<ublox_ubx_msgs::msg::UBXNavPVT>(
+            pvt_topic_, QOS_QUEUE,
+            std::bind(&RadarParser::pvt_callback, this, std::placeholders::_1));
+        // RCLCPP_INFO(this->get_logger(),
+        //     "absolute velocity ON, ego speed from: %s", pvt_topic_.c_str());
+    } else {
+        // RCLCPP_INFO(this->get_logger(), "absolute velocity OFF (relative velocity 출력)");
+    }
 
     // CAN socket
     if (!open_can_socket()) {
@@ -99,12 +112,71 @@ void RadarParser::recv_loop() {
             }
 
             if (tr_objects == 32) {
-                pub_radar_tr_->publish(tr_array);
+                // 50 Hz 타이머가 사용할 가장 최근의 완성된 스캔을 보관한다.
+                latest_tr_array_ = tr_array;
+                has_latest_tr_array_ = true;
                 //std::cout << "[turn_64] tr_objects: " << tr_objects << std::endl;
-                // start = false;
+                // 다음 0x500 프레임에서 새 스캔이 시작될 때까지 현재 스캔을 닫는다.
+                start = false;
             }
         }
     }
+}
+
+void RadarParser::publish_latest_tr_array() {
+    fo_msgs::msg::RadarTrArray latest;
+
+    {
+        std::lock_guard<std::mutex> lock(tr_mutex);
+        if (!has_latest_tr_array_) return;
+        latest = latest_tr_array_;
+    }
+
+    pub_radar_tr_->publish(latest);
+}
+
+void RadarParser::pvt_callback(const ublox_ubx_msgs::msg::UBXNavPVT::SharedPtr msg) {
+    // 자차 지면속도[m/s] 계산.
+    //  1) 수신기가 도플러 속도를 채워주면(g_speed/vel_n/vel_e != 0) 그대로 사용(정확·저지연).
+    //  2) 속도 필드가 0이면(현재 드라이버가 속도 미출력) 위치(lat/lon)를 차분해 추정.
+    static constexpr double DEG2RAD = M_PI / 180.0;
+    static constexpr double R_EARTH = 6378137.0;  // WGS84 장반경[m]
+
+    const double lat = msg->lat * 1e-7 * DEG2RAD;
+    const double lon = msg->lon * 1e-7 * DEG2RAD;
+    const double itow = msg->itow * 1e-3;  // [s]
+
+    // 위치 차분 속도(항상 상태 유지)
+    double diff_speed = -1.0;
+    if (have_prev_pvt_) {
+        const double dt = itow - prev_itow_;
+        if (dt > 0.0 && dt < 2.0) {  // 주 롤오버/중복 프레임 방지
+            const double dn = (lat - prev_lat_) * R_EARTH;
+            const double de = (lon - prev_lon_) * R_EARTH * std::cos(lat);
+            diff_speed = std::hypot(dn, de) / dt;
+        }
+    }
+    prev_lat_ = lat;
+    prev_lon_ = lon;
+    prev_itow_ = itow;
+    have_prev_pvt_ = true;
+
+    double speed;
+    const bool has_doppler = (msg->g_speed != 0 || msg->vel_n != 0 || msg->vel_e != 0);
+    if (has_doppler) {
+        speed = msg->g_speed * 1e-3;  // 2D 지면속도[m/s]
+    } else if (diff_speed >= 0.0) {
+        speed = 0.5 * ego_speed_.load() + 0.5 * diff_speed;  // 차분 노이즈 저감(1차 LPF)
+    } else {
+        return;  // 첫 프레임 등 아직 속도 없음
+    }
+
+    ego_speed_.store(static_cast<float>(speed));
+    ego_speed_stamp_ns_.store(this->now().nanoseconds());
+
+    RCLCPP_INFO_THROTTLE(this->get_logger(), *this->get_clock(), 1000,
+        "ego_speed=%.2f m/s (%.1f km/h) [%s]",
+        speed, speed * 3.6, has_doppler ? "doppler" : "pos-diff");
 }
 
 static int signed_value(int raw, int n_bit) {
@@ -122,7 +194,7 @@ fo_msgs::msg::RadarTr RadarParser::tr_parser(const struct can_frame &frame) {
     fo_msgs::msg::RadarTr tr;
     tr.track_id       = id - 0x500 + 1;  // 1~64
     tr.track_status   = (frame.data[1] >> 5) & 0x07;
-    tr.track_valid    = 0;
+    tr.track_valid    = 1;
     tr.track_type     = 0;
     tr.length         = 1.0f;
 
@@ -140,7 +212,19 @@ fo_msgs::msg::RadarTr RadarParser::tr_parser(const struct can_frame &frame) {
 
     // vel [m/s]
     int raw_range_rate = ((frame.data[6] & 0x3F) << 8) | frame.data[7];
-    float range_rate = signed_value(raw_range_rate, 14) * 0.01f;  // [m/s](signed)
+    float range_rate = signed_value(raw_range_rate, 14) * 0.01f;  // [m/s] radial(상대속도, signed)
+
+    // 자차 이동 보정: 상대 range-rate -> 절대 range-rate.
+    //   레이더는 시선방향(radial) 성분만 측정하므로, 자차 속도의 시선방향 투영
+    //   (ego_speed * cos(bearing))을 더해 자차 이동분을 상쇄한다.
+    //   정지물체는 abs_rate≈0, 이동물체는 실제 절대속도가 남는다.
+    //   (bearing = rad, 전방 = +x. GNSS 신선(<0.5s)할 때만 보정)
+    if (absolute_velocity_) {
+        const int64_t stamp = ego_speed_stamp_ns_.load();
+        if (stamp > 0 && (this->now().nanoseconds() - stamp) < 500000000LL) {
+            range_rate += ego_speed_.load() * std::cos(rad);
+        }
+    }
 
     float vel_x = range_rate * std::cos(rad);
     float vel_y = range_rate * std::sin(rad);
@@ -158,6 +242,7 @@ fo_msgs::msg::RadarTr RadarParser::tr_parser(const struct can_frame &frame) {
     //           << " / posx: " << pos_x << " / posy: " << pos_y
     //           << " / velx: " << vel_x << " / vely: " << vel_y
     //           << " / width: " << tr.width << " / rc: " << tr.rolling_count << std::endl;
+
     return tr;
 }
 
